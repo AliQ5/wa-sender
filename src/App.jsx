@@ -8,8 +8,8 @@ import { TbFileSpreadsheet, TbTemplate, TbEye, TbSend, TbReport, TbDeviceDesktop
 
 gsap.registerPlugin(ScrollTrigger)
 
-const DOWNLOAD_URL_WINDOWS = "https://wa-sender.com/downloads/wa-sender-setup.exe"
-const DOWNLOAD_URL_MAC = "https://wa-sender.com/downloads/wa-sender-setup.dmg"
+const DOWNLOAD_URL_WINDOWS = "/wa-sender-setup.exe"
+const DOWNLOAD_URL_MAC = "#"
 
 // ─── CUSTOM CURSOR ─────────────────────────────────────────────────────────────
 function CustomCursor() {
@@ -229,7 +229,8 @@ function Hero() {
             </motion.div>
           </motion.a>
           <motion.a 
-            href={DOWNLOAD_URL_MAC} download
+            href={DOWNLOAD_URL_MAC}
+            onClick={(e) => { e.preventDefault(); alert('MacOS version coming soon!') }}
             className="btn btn-outline"
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
           >
@@ -453,8 +454,8 @@ function Releases() {
                 <td>May 16, 2026</td>
                 <td>MacOS (Apple Silicon)</td>
                 <td>
-                  <motion.a href={DOWNLOAD_URL_MAC} download style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text)', fontWeight: 500 }}>
-                    <motion.div whileHover={{ y: 3 }}><FaDownload size={14} /></motion.div> Download .dmg
+                  <motion.a href={DOWNLOAD_URL_MAC} onClick={(e) => { e.preventDefault(); alert('MacOS version coming soon!') }} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text)', fontWeight: 500 }}>
+                    <motion.div whileHover={{ y: 3 }}><FaApple size={14} /></motion.div> Coming Soon
                   </motion.a>
                 </td>
               </tr>
@@ -591,7 +592,7 @@ function CTA() {
           <motion.a href={DOWNLOAD_URL_WINDOWS} download className="btn btn-primary" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             Download for Windows
           </motion.a>
-          <motion.a href={DOWNLOAD_URL_MAC} download className="btn btn-outline" style={{ background: 'white' }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+          <motion.a href={DOWNLOAD_URL_MAC} onClick={(e) => { e.preventDefault(); alert('MacOS version coming soon!') }} className="btn btn-outline" style={{ background: 'white' }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             Download for MacOS
           </motion.a>
         </div>
