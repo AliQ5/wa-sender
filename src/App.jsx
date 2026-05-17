@@ -3,13 +3,14 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { FaWhatsapp, FaBars, FaTimes, FaDownload, FaDesktop, FaApple, FaWindows, FaArrowRight, FaCheckCircle, FaUserCircle } from 'react-icons/fa'
-import { TbFileSpreadsheet, TbTemplate, TbEye, TbSend, TbReport, TbDeviceDesktop } from 'react-icons/tb'
+import { FaWhatsapp, FaBars, FaTimes, FaDownload, FaApple, FaWindows, FaCheckCircle, FaUserCircle } from 'react-icons/fa'
+import { TbFileSpreadsheet, TbTemplate, TbEye, TbSend, TbReport, TbDeviceDesktop, TbArrowRight, TbClockBolt, TbPlayerPause, TbRefresh, TbBookmark, TbCopy } from 'react-icons/tb'
+import { APP_VERSION } from './constants'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const DOWNLOAD_URL_WINDOWS = "https://github.com/AliQ5/wa-sender-app/releases/latest/download/WA-SENDER.Setup.1.0.0.exe"
-const DOWNLOAD_URL_MAC = "https://github.com/AliQ5/wa-sender-app/releases/latest/download/WA-SENDER-1.0.0-arm64.dmg"
+const DOWNLOAD_URL_WINDOWS = `https://github.com/AliQ5/wa-sender-app/releases/latest/download/WA-SENDER.Setup.${APP_VERSION}.exe`
+const DOWNLOAD_URL_MAC = `https://github.com/AliQ5/wa-sender-app/releases/latest/download/WA-SENDER-${APP_VERSION}-arm64.dmg`
 
 // ─── CUSTOM CURSOR ─────────────────────────────────────────────────────────────
 function CustomCursor() {
@@ -74,6 +75,7 @@ function Navbar() {
   const { scrollY } = useScroll()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showNewBadge, setShowNewBadge] = useState(true)
 
   useEffect(() => {
     return scrollY.onChange((latest) => {
@@ -81,12 +83,25 @@ function Navbar() {
     })
   }, [scrollY])
 
+  useEffect(() => {
+    const st = ScrollTrigger.create({
+      trigger: "#whats-new",
+      start: "top 60%",
+      onEnter: () => setShowNewBadge(false)
+    })
+    return () => st.kill()
+  }, [])
+
   const handleNavClick = (e, target) => {
     e.preventDefault()
     setMobileMenuOpen(false)
     const el = document.querySelector(target)
     if (el) {
-      window.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+      if (target === '#whats-new') {
+        window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' })
+      } else {
+        window.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+      }
     }
   }
 
@@ -105,6 +120,16 @@ function Navbar() {
 
           <div className="nav-links">
             <a href="#features" onClick={(e) => handleNavClick(e, '#features')} className="nav-link">Features</a>
+            <a href="#whats-new" onClick={(e) => handleNavClick(e, '#whats-new')} className="nav-link">
+              What's new
+              <span style={{
+                display: showNewBadge ? 'inline-block' : 'none',
+                fontSize: "9px", padding: "1px 5px",
+                background: "#25D366", color: "#fff",
+                borderRadius: "20px", marginLeft: "5px",
+                verticalAlign: "middle"
+              }}>NEW</span>
+            </a>
             <a href="#how" onClick={(e) => handleNavClick(e, '#how')} className="nav-link">How it works</a>
             <a href="#releases" onClick={(e) => handleNavClick(e, '#releases')} className="nav-link">Releases</a>
             <a href="#about" onClick={(e) => handleNavClick(e, '#about')} className="nav-link">About</a>
@@ -138,6 +163,7 @@ function Navbar() {
           >
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
               <a href="#features" onClick={(e) => handleNavClick(e, '#features')}>Features</a>
+              <a href="#whats-new" onClick={(e) => handleNavClick(e, '#whats-new')}>What's new</a>
               <a href="#how" onClick={(e) => handleNavClick(e, '#how')}>How it works</a>
               <a href="#releases" onClick={(e) => handleNavClick(e, '#releases')}>Releases</a>
               <a href="#about" onClick={(e) => handleNavClick(e, '#about')}>About</a>
@@ -188,6 +214,32 @@ function Hero() {
   return (
     <section className="hero">
       <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+          style={{
+            background: '#E8FBF0',
+            border: '0.5px solid #9FE1CB',
+            borderRadius: 20,
+            fontSize: 12,
+            color: '#0F6E56',
+            padding: '5px 14px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            marginBottom: 14,
+            cursor: 'pointer'
+          }}
+          onClick={() => {
+            const el = document.querySelector('#releases')
+            if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+          }}
+        >
+          🎉 v{APP_VERSION} is out — Smart delays, Pause & Resume, Template Library and more <TbArrowRight />
+        </motion.div>
+
         <motion.div 
           className="badge"
           initial={{ opacity: 0, y: -20 }}
@@ -246,10 +298,15 @@ function Hero() {
           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 2 }}
         >
           <div className="mockup-inner">
-            <div className="mockup-header">
-              <div className="dot" style={{ background: '#FF5F56' }} />
-              <div className="dot" style={{ background: '#FFBD2E' }} />
-              <div className="dot" style={{ background: '#27C93F' }} />
+            <div className="mockup-header" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '0 16px' }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <div className="dot" style={{ background: '#FF5F56' }} />
+                <div className="dot" style={{ background: '#FFBD2E' }} />
+                <div className="dot" style={{ background: '#27C93F' }} />
+              </div>
+              <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', fontSize: 11, color: '#6B7280', fontWeight: 500 }}>
+                WA-SENDER v{APP_VERSION}
+              </div>
             </div>
             <div style={{ padding: 32, background: 'white' }}>
               <div style={{ display: 'flex', gap: 24, height: 200 }}>
@@ -330,6 +387,119 @@ function Features() {
               </div>
               <h3 style={{ fontSize: 18, marginBottom: 8 }}>{f.title}</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{f.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── WHAT'S NEW ────────────────────────────────────────────────────────────────
+function WhatsNew() {
+  const containerRef = useRef(null)
+
+  const features = [
+    { 
+      title: 'Smart delay randomizer', 
+      desc: 'Set a minimum and maximum delay between messages and WA-SENDER picks a random value in that range for every send. Keeps your account safe by mimicking natural human behaviour.', 
+      icon: TbClockBolt, 
+      bg: '#E8FBF0',
+      pills: ['Safe (5–8s)', 'Normal (3–5s)', 'Fast (1–3s)']
+    },
+    { 
+      title: 'Pause & resume sending', 
+      desc: 'Stop the send session at any point and pick up exactly where you left off. The app never interrupts a message mid-send — it always finishes the current one first.', 
+      icon: TbPlayerPause, 
+      bg: '#EFF6FF',
+      pills: ['Pause', 'Resume', 'Stop']
+    },
+    { 
+      title: 'Retry failed contacts', 
+      desc: 'After a session ends, any contacts that failed are shown in a summary. One click retries only those contacts using the same template — no need to start over.', 
+      icon: TbRefresh, 
+      bg: '#FEF2F0',
+      pills: ['Up to 3 attempts', 'Auto log updated']
+    },
+    { 
+      title: 'Template library', 
+      desc: 'Save any message template with a custom name and reload it in one click next time. Your templates are stored locally and persist between sessions.', 
+      icon: TbBookmark, 
+      bg: '#F5F3FF',
+      pills: ['Saved locally', 'Up to 50 templates']
+    },
+    { 
+      title: 'Duplicate phone detection', 
+      desc: 'WA-SENDER automatically scans your file for duplicate phone numbers the moment you select the phone column. Choose to keep only the first occurrence or skip all duplicates before sending.', 
+      icon: TbCopy, 
+      bg: '#FFFBEB',
+      pills: ['Auto scan', 'Keep first', 'Skip all']
+    }
+  ]
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+
+    const cards = containerRef.current.querySelectorAll('.whats-new-card')
+    cards.forEach((card, index) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out",
+          scrollTrigger: { trigger: card, start: "top 85%" },
+          delay: index * 0.1
+        }
+      )
+    })
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => {
+        if (t.vars.trigger && cards && Array.from(cards).includes(t.vars.trigger)) {
+          t.kill()
+        }
+      })
+    }
+  }, [])
+
+  return (
+    <section id="whats-new">
+      <div className="container">
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <span style={{ color: 'var(--accent)', fontWeight: 500, fontSize: 14 }}>v{APP_VERSION} Release</span>
+          <h2 style={{ fontSize: 32, marginTop: 8, marginBottom: 16 }}>What's new in this version</h2>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto' }}>Five powerful upgrades that make WA-SENDER faster, safer, and smarter to use.</p>
+        </div>
+
+        <div className="whats-new-grid" ref={containerRef}>
+          {features.map((f, i) => (
+            <motion.div 
+              key={i} 
+              className={`card whats-new-card ${i === 4 ? 'centered-card' : ''}`}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 12, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                <motion.div 
+                  whileHover={{ scale: 1.08, transition: { duration: 0.15 } }}
+                  style={{ width: 44, height: 44, borderRadius: 12, background: f.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <f.icon size={22} color="#0D0D0D" />
+                </motion.div>
+                <div style={{ fontSize: 10, background: '#E8FBF0', color: '#0F6E56', borderRadius: 20, padding: '2px 7px' }}>
+                  v{APP_VERSION}
+                </div>
+              </div>
+              
+              <h3 style={{ fontSize: 18, marginBottom: 8 }}>{f.title}</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 14, flex: 1, marginBottom: 20 }}>{f.desc}</p>
+              
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {f.pills.map((pill, idx) => (
+                  <span key={idx} style={{ fontSize: 11, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', padding: '2px 8px', borderRadius: 20, border: '1px solid #E5E7EB' }}>
+                    {pill}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -421,8 +591,8 @@ function Releases() {
             <thead>
               <tr>
                 <th>Version</th>
-                <th>Release Date</th>
-                <th>OS</th>
+                <th>Date</th>
+                <th>What's new</th>
                 <th>Download</th>
               </tr>
             </thead>
@@ -430,32 +600,40 @@ function Releases() {
               <tr>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    v1.0.0 
+                    v{APP_VERSION}
                     <motion.span 
-                      style={{ background: 'rgba(37, 211, 102, 0.1)', color: 'var(--accent)', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}
+                      style={{ background: '#E8FBF0', color: '#0F6E56', border: '0.5px solid #9FE1CB', padding: '2px 6px', borderRadius: 20, fontSize: 11, fontWeight: 500 }}
                       animate={{ opacity: [0.5, 1, 0.5] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
-                      Latest
+                      latest
                     </motion.span>
                   </div>
                 </td>
-                <td>May 16, 2026</td>
-                <td>Windows (x64)</td>
+                <td>May 2025</td>
+                <td>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    {['Smart Delay', 'Pause & Resume', 'Retry Failed', 'Template Library', 'Dupe Detection'].map((pill, idx) => (
+                      <span key={idx} style={{ background: '#E8FBF0', color: '#0F6E56', border: '0.5px solid #9FE1CB', borderRadius: 20, fontSize: 11, padding: '2px 8px', marginRight: 4 }}>
+                        {pill}
+                      </span>
+                    ))}
+                  </div>
+                </td>
                 <td>
                   <motion.a href={DOWNLOAD_URL_WINDOWS} download style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text)', fontWeight: 500 }}>
-                    <motion.div whileHover={{ y: 3 }}><FaDownload size={14} /></motion.div> Download .exe
+                    <motion.div whileHover={{ y: 3 }}><FaDownload size={14} /></motion.div> Download
                   </motion.a>
                 </td>
               </tr>
               <tr>
                 <td>v1.0.0</td>
-                <td>May 16, 2026</td>
-                <td>MacOS (Apple Silicon)</td>
+                <td>May 2024</td>
+                <td style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                  Initial release — full 3-step wizard, Excel import, template editor, delivery log
+                </td>
                 <td>
-                  <motion.a href={DOWNLOAD_URL_MAC} download style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text)', fontWeight: 500 }}>
-                    <motion.div whileHover={{ y: 3 }}><FaApple size={14} /></motion.div> Download .dmg
-                  </motion.a>
+                  <span style={{ color: 'var(--text-hint)' }}>Archived</span>
                 </td>
               </tr>
             </tbody>
@@ -615,7 +793,7 @@ function Footer() {
           <a href="#about" className="footer-link">About</a>
         </div>
         <div style={{ color: 'var(--text-hint)', fontSize: 13, marginTop: 24 }}>
-          &copy; {new Date().getFullYear()} Ali Qureshi. All rights reserved. Not affiliated with WhatsApp Inc.
+          &copy; {new Date().getFullYear()} WA-SENDER v{APP_VERSION} &middot; Made by Ali Qureshi
         </div>
       </div>
     </footer>
@@ -658,6 +836,7 @@ export default function App() {
       <main>
         <Hero />
         <Features />
+        <WhatsNew />
         <HowToUse />
         <Releases />
         <WhyWaSender />
