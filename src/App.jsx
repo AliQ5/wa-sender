@@ -4,7 +4,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { FaWhatsapp, FaBars, FaTimes, FaDownload, FaApple, FaWindows, FaCheckCircle, FaUserCircle } from 'react-icons/fa'
-import { TbFileSpreadsheet, TbTemplate, TbEye, TbSend, TbReport, TbDeviceDesktop, TbArrowRight, TbClockBolt, TbPlayerPause, TbRefresh, TbBookmark, TbCopy } from 'react-icons/tb'
+import { TbFileSpreadsheet, TbTemplate, TbEye, TbSend, TbReport, TbDeviceDesktop, TbArrowRight, TbClockBolt, TbPlayerPause, TbRefresh, TbBookmark, TbCopy, TbInfoCircle } from 'react-icons/tb'
 import { APP_VERSION } from './constants'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -434,6 +434,13 @@ function WhatsNew() {
       icon: TbCopy, 
       bg: '#FFFBEB',
       pills: ['Auto scan', 'Keep first', 'Skip all']
+    },
+    { 
+      title: 'Interactive Help Center', 
+      desc: 'Access a complete self-service guide, step-by-step interactive timeline, collapsible FAQs, and critical anti-ban safety guidelines directly within the application.', 
+      icon: TbInfoCircle, 
+      bg: '#ECFDF5',
+      pills: ['Collapsible FAQs', 'Timeline Guide', 'Safety Tips']
     }
   ]
 
@@ -467,14 +474,14 @@ function WhatsNew() {
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
           <span style={{ color: 'var(--accent)', fontWeight: 500, fontSize: 14 }}>v{APP_VERSION} Release</span>
           <h2 style={{ fontSize: 32, marginTop: 8, marginBottom: 16 }}>What's new in this version</h2>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto' }}>Five powerful upgrades that make WA-SENDER faster, safer, and smarter to use.</p>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto' }}>Six powerful upgrades that make WA-SENDER faster, safer, and smarter to use.</p>
         </div>
 
         <div className="whats-new-grid" ref={containerRef}>
           {features.map((f, i) => (
             <motion.div 
               key={i} 
-              className={`card whats-new-card ${i === 4 ? 'centered-card' : ''}`}
+              className="card whats-new-card"
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               style={{ background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 12, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}
             >
@@ -610,10 +617,10 @@ function Releases() {
                     </motion.span>
                   </div>
                 </td>
-                <td>May 2025</td>
+                <td>May 2026</td>
                 <td>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                    {['Smart Delay', 'Pause & Resume', 'Retry Failed', 'Template Library', 'Dupe Detection'].map((pill, idx) => (
+                    {['Smart Delay', 'Pause & Resume', 'Retry Failed', 'Template Library', 'Dupe Detection', 'Help Center'].map((pill, idx) => (
                       <span key={idx} style={{ background: '#E8FBF0', color: '#0F6E56', border: '0.5px solid #9FE1CB', borderRadius: 20, fontSize: 11, padding: '2px 8px', marginRight: 4 }}>
                         {pill}
                       </span>

@@ -301,11 +301,23 @@ tr:last-child td {
   transform-origin: bottom left;
 }
 
+.whats-new-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .whats-new-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
   }
-  .grid-2, .grid-3 {
+  .grid-2, .grid-3, .whats-new-grid {
     grid-template-columns: 1fr;
   }
   .mobile-menu-btn {
